@@ -14,6 +14,10 @@ const Register = RegisterModel(db, Sequelize);
 
 db.sync()
     .then(res => {
-        console.log(res, "Tables ok")
+        console.log("Synch!")
     })
     .catch(err => console.log(err))
+
+module.exports = {
+    Register
+}
