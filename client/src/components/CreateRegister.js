@@ -65,14 +65,23 @@ export default function Registers() {
         });
     };
 
+    const handleCloseSnackAlert = () => {
+        setSnackAlert({
+            ...snackAlert,
+            status: "",
+            message: "",
+            open: false
+        });
+    };
+
     return (
         <Grid xs={12}>
-            <Appbar title="Crear Registro">
+            <Appbar title="Create register">
                 <Paper style={styles.formContainer}>
                     <form onSubmit={onSubmitForm} style={styles.form}>
-                        <TextField style={styles.fields} name="concept" label="Concepto" onChange={onChangeHandler} value={form.concept} />
-                        <TextField style={styles.fields} name="amount" label="Monto" onChange={onChangeHandler} value={form.amount} />
-                        <InputLabel style={styles.fields} id="type">Seleccione operación</InputLabel>
+                        <TextField style={styles.fields} name="concept" label="Concept" onChange={onChangeHandler} value={form.concept} />
+                        <TextField style={styles.fields} name="amount" label="Amount" onChange={onChangeHandler} value={form.amount} />
+                        <InputLabel style={styles.fields} id="type">Operation</InputLabel>
                         <Select
                             name="type"
                             labelId="type"
@@ -84,7 +93,7 @@ export default function Registers() {
                             <MenuItem value={"income"}>Ingreso</MenuItem>
                             <MenuItem value={"outcome"}>Egreso</MenuItem>
                         </Select>
-                        <Button fullWidth type="submit" color="primary" variant="contained">Crear</Button>
+                        <Button fullWidth type="submit" color="primary" variant="contained">Create</Button>
                     </form>
                 </Paper>
                 {
@@ -101,7 +110,8 @@ export default function Registers() {
                     ) : snackAlert.status === "error" ? (
                         <Snackbar
                             open={snackAlert.open}
-                            autoHideDuration={6000}
+                            autoHideDuration={3000}
+                            onClose={handleCloseSnackAlert}
                         >
                             <Alert severity="error">
                                 {snackAlert.message}

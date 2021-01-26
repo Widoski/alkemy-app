@@ -5,6 +5,7 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 import "../app.css";
 import Appbar from './Appbar';
+import moment from 'moment';
 
 const styles = {
     balanceBox: {
@@ -27,6 +28,7 @@ const styles = {
         color: "white"
     },
     tableTitle: {
+        fontSize: 20,
         fontWeight: "bold",
         textAlign: "center",
         width: "100%",
@@ -40,6 +42,9 @@ const styles = {
         alignItems: "center",
         height: "100%",
         fontWeight: "bold"
+    },
+    headRow: {
+        fontWeight: "bold",
     }
 }
 
@@ -47,44 +52,44 @@ export default function Home() {
     const [registers, setRegisters] = useState([]);
     const [balance, setBalance] = useState(0);
 
-    useEffect(() => {
-        axios.get(`${conf.API_URL}/registers`)
-            .then(res => {
-                setRegisters(res.data);
+    let limit = 10;
+    let offset = 0;
 
+    useEffect(() => {
+        axios.get(`${conf.API_URL}/registers?limit=${limit}&offset=${offset}`)
+            .then(res => {
+                setRegisters(res.data.rows);
+                console.log(res.data.rows)
                 let income = 0;
                 let outcome = 0;
 
-                registers.forEach(r => {
+                res.data.rows.forEach(r => {
                     if (r.type === "income") {
-                        income = income + r.amount;
+                        income = income + parseInt(r.amount);
                     }
                     if (r.type === "outcome") {
-                        outcome = outcome + r.amount;
+                        outcome = outcome + parseInt(r.amount);
                     }
-                })
-
+                });
                 const balance = income - outcome;
                 setBalance(balance);
-
-            })
+            });
     }, [])
-
-    console.log(balance)
 
     return (
         <Grid container>
-            <Appbar title="Bienvenido">
+            <Appbar title="Welcome">
                 <Grid item xs={12} xl={6}>
                     <Toolbar>
-                        <Typography variant="button" style={styles.tableTitle}> Ultimos registros</Typography>
+                        <Typography variant="button" style={styles.tableTitle}>Last registers</Typography>
                     </Toolbar>
                     <Table style={styles.table} component={Paper}>
                         <TableHead>
                             <TableRow>
-                                <TableCell>Tipo</TableCell>
-                                <TableCell>Concepto</TableCell>
-                                <TableCell>Cantidad</TableCell>
+                                <TableCell style={styles.headRow}>Type</TableCell>
+                                <TableCell style={styles.headRow}>Concept</TableCell>
+                                <TableCell style={styles.headRow}>Date</TableCell>
+                                <TableCell style={styles.headRow}>Amount</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
@@ -93,6 +98,7 @@ export default function Home() {
                                     <TableRow key={r.id}>
                                         <TableCell>{r.type}</TableCell>
                                         <TableCell>{r.concept}</TableCell>
+                                        <TableCell>{moment(r.createdAt).format("ll")}</TableCell>
                                         <TableCell>{`$${r.amount}`}</TableCell>
                                     </TableRow>
                                 ))
@@ -110,7 +116,7 @@ export default function Home() {
                     <Grid item xs={6}>
                         <Card style={styles.registerBox}>
                             <Typography variant="button">
-                                <Link className="linkToRegister" style={styles.linkToRegister} to="/registers">Ver registros</Link>
+                                <Link className="linkToRegister" style={styles.linkToRegister} to="/registers">My registers</Link>
                             </Typography>
                         </Card>
                     </Grid>
