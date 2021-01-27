@@ -1,9 +1,10 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { useParams } from "react-router-dom";
-import { Button, Paper, TextField, Select, MenuItem, Snackbar, Grid, InputLabel } from '@material-ui/core';
+import { Button, Paper, TextField, Select, MenuItem, Grid, InputLabel } from '@material-ui/core';
 import Appbar from './Appbar';
 import axios from "axios";
 import conf from '../conf';
+import AppContext from '../appContext';
 
 const styles = {
     formContainer: {
@@ -19,6 +20,8 @@ const styles = {
 }
 
 export default function EditRegisters(props) {
+    const context = useContext(AppContext);
+
     const { id } = useParams();
 
     const [updateRegister, setUpdateRegister] = useState({
@@ -27,12 +30,10 @@ export default function EditRegisters(props) {
         type: ""
     });
 
-
     useEffect(() => {
         axios.get(`${conf.API_URL}/registers/${id}`)
             .then(res => {
                 const register = res.data;
-                console.log(register)
 
                 setUpdateRegister({
                     ...updateRegister,
@@ -58,9 +59,10 @@ export default function EditRegisters(props) {
 
         axios.put(`${conf.API_URL}/registers/${id}`, updateRegister)
             .then(res => {
-                console.log(res.data);
+                context.handleSnackbar("success", "Registro actualizado", true);
+                props.history.push("/registers")
             })
-            .catch(err => console.log(err));
+            .catch(err => context.handleSnackbar("error", "No se pudo actualizar el registro", true));
     }
 
     return (
@@ -83,7 +85,7 @@ export default function EditRegisters(props) {
                             <MenuItem value={"income"}>Income</MenuItem>
                             <MenuItem value={"outcome"}>Outcome</MenuItem>
                         </Select>
-                        <Button fullWidth type="submit" color="primary" variant="contained">Create</Button>
+                        <Button fullWidth type="submit" color="primary" variant="contained">Edit</Button>
                     </form>
                 </Paper>
             </Appbar>

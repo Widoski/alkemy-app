@@ -1,9 +1,9 @@
-import { useState } from 'react';
-import { Button, Paper, TextField, Select, MenuItem, Snackbar, Grid, InputLabel } from '@material-ui/core';
-import MuiAlert from '@material-ui/lab/Alert';
+import { useState, useContext } from 'react';
+import { Button, Paper, TextField, Select, MenuItem, Grid, InputLabel } from '@material-ui/core';
 import Appbar from './Appbar';
 import conf from '../conf';
 import axios from 'axios';
+import AppContext from '../appContext';
 
 const styles = {
     formContainer: {
@@ -18,17 +18,8 @@ const styles = {
     }
 }
 
-function Alert(props) {
-    return <MuiAlert elevation={6} variant="filled" {...props} />;
-}
-
 export default function Registers() {
-    const [snackAlert, setSnackAlert] = useState({
-        status: "",
-        alert: "",
-        message: "",
-        open: false
-    });
+    const context = useContext(AppContext);
 
     const [form, setForm] = useState({
         concept: "",
@@ -51,28 +42,10 @@ export default function Registers() {
         axios.post(`${conf.API_URL}/registers`, form)
             .then(res => {
                 console.log(res.data);
-                handleSnackbar("success", "Registro creado", true);
+                context.handleSnackbar("success", "Registro creado", true);
             })
-            .catch(err => handleSnackbar("error", "No se pudo crear el registro", true));
+            .catch(err => context.handleSnackbar("error", "No se pudo crear el registro", true));
     }
-
-    const handleSnackbar = (status, message, boolean) => {
-        setSnackAlert({
-            ...snackAlert,
-            status,
-            message,
-            open: boolean
-        });
-    };
-
-    const handleCloseSnackAlert = () => {
-        setSnackAlert({
-            ...snackAlert,
-            status: "",
-            message: "",
-            open: false
-        });
-    };
 
     return (
         <Grid xs={12}>
@@ -96,31 +69,6 @@ export default function Registers() {
                         <Button fullWidth type="submit" color="primary" variant="contained">Create</Button>
                     </form>
                 </Paper>
-                {
-                    snackAlert.status === "success" ? (
-                        <Snackbar
-                            open={snackAlert.open}
-                            autoHideDuration={6000}
-                        >
-
-                            <Alert severity="success">
-                                {snackAlert.message}
-                            </Alert>
-                        </Snackbar>
-                    ) : snackAlert.status === "error" ? (
-                        <Snackbar
-                            open={snackAlert.open}
-                            autoHideDuration={3000}
-                            onClose={handleCloseSnackAlert}
-                        >
-                            <Alert severity="error">
-                                {snackAlert.message}
-                            </Alert>
-                        </Snackbar>
-                    ) : (
-                                null
-                            )
-                }
             </Appbar>
         </Grid>
 
