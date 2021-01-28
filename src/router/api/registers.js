@@ -5,27 +5,27 @@ const { Register } = require("../../db");
 const router = express.Router();
 
 router.get("/registers", (req, res) => {
-
-    if (req.query.limit) {
-        const limit = parseInt(req.query.limit);
-        const offset = parseInt(req.query.offset);
-
+    if (req.query.type) {
         Register.findAndCountAll({
-            limit: limit,
-            offset: offset
+            where: {
+                type: req.query.type,
+            },
+            limit: parseInt(req.query.limit) || null,
+            offset: parseInt(req.query.offset) || 0,
         })
-            .then(results => {
-                res.json(results);
-            })
-            .catch(err => console.log(err));
-    } else {
-        Register.findAll()
             .then(registers => {
                 res.json(registers);
             })
-            .catch(err => {
-                console.log(err);
+            .catch(err => res.json(err));
+    } else {
+        Register.findAndCountAll({
+            limit: parseInt(req.query.limit) || null,
+            offset: parseInt(req.query.offset) || 0,
+        })
+            .then(registers => {
+                res.json(registers);
             })
+            .catch(err => res.json(err));
     }
 });
 
@@ -33,59 +33,47 @@ router.get("/registers/:id", (req, res) => {
     if (req.params.id) {
         Register.findOne({
             where: {
-                id: parseInt(req.params.id)
+                id: req.params.id
             }
         })
             .then(register => {
                 res.json(register);
             })
-            .catch(err => res.send(err))
+            .catch(err => res.status(404).json({ msg: "Register not founded" }));
     } else {
-        res.status(404).json({ msg: `Register ${req.params.id} not founded` });
+        res.status(400).json({ msg: "Please insert id" });
     }
 });
 
 router.post("/registers", (req, res) => {
-    const newRegister = {
-        concept: req.body.concept,
-        amount: req.body.amount,
-        type: req.body.type
-    }
-
-    if (!newRegister.concept || !newRegister.amount || !newRegister.type) {
+    if (!req.body.concept || !req.body.amount || !req.body.type) {
         res.status(400).json({ msg: "Incomplete data" });
     } else {
-        Register.create(newRegister);
-        res.json(newRegister);
+        const { concept, amount, type } = req.body;
+        const newRegister = { concept, amount, type };
+
+        Register.create(newRegister)
+            .then(result => {
+                res.json(result);
+            })
+            .catch(err => res.send(err));
     }
 });
 
 router.put("/registers/:id", (req, res) => {
-    if (req.params.id) {
-        const update = req.body;
-
-        Register.findOne({
+    if (!req.body.concept || !req.body.amount || !req.body.type) {
+        res.status(400).res.json({ msg: "Please, complete all forms" });
+    } else {
+        const newRegister = req.body;
+        Register.update(newRegister, {
             where: {
                 id: req.params.id
             }
         })
-            .then(register => {
-                register.concept = update.concept ? update.concept : register.concept;
-                register.amount = update.amount ? update.concept : register.concept;
-                register.type = update.type ? update.type : register.type;
-
-                return update
-            })
             .then(registerUpdated => {
-                Register.update(registerUpdated, {
-                    where: {
-                        id: req.params.id
-                    }
-                });
-                res.json(update);
-            });
-    } else {
-        res.status(400).res.json({ msg: `Register with id ${req.params.id} not founded` });
+                res.json(registerUpdated);
+            })
+            .catch(err => res.send(err));
     }
 });
 
@@ -93,12 +81,15 @@ router.delete("/registers/:id", (req, res) => {
     if (req.params.id) {
         Register.destroy({
             where: {
-                id: req.params.id
+                id: parseInt(req.params.id)
             }
-        });
-        res.json({ msg: `Register ${req.params.id} deleted` });
+        })
+            .then(result => {
+                res.json({ msg: `Register ${req.params.id} deleted` });
+            })
+            .catch(err => console.log(err))
     } else {
-        res.status(200).json({ msg: `Id ${req.params.id} deleted` })
+        res.status(400).json({ msg: "Insert id" })
     }
 });
 

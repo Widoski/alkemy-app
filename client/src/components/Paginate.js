@@ -1,13 +1,13 @@
 import Pagination from '@material-ui/lab/Pagination';
 
-export default function Paginate({ numberOfRegisters, registersPerPage, fetchRegisters, type }) {
-    const pages = Math.ceil(numberOfRegisters / registersPerPage);
+export default function Paginate({ numberOfRegisters, limit, fetchRegisters }) {
+    const pages = Math.ceil(numberOfRegisters / limit);
 
     const onChangePage = (e, value) => {
-        fetchRegisters(value, type);
+        fetchRegisters(value);
     };
 
     return (
-        <Pagination count={pages} onChange={onChangePage} rowsPerPage={registersPerPage} />
+        <Pagination count={pages} onChange={onChangePage} rowsPerPage={limit} />
     )
 }   

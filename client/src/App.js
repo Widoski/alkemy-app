@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { ThemeProvider, Snackbar } from '@material-ui/core';
 import theme from './theme';
 import Home from './components/Home';
-import Registers from './components/Registers';
+import RegistersTab from './components/RegistersTab';
 import CreateRegister from './components/CreateRegister';
 import EditRegisters from './components/EditRegisters';
 import MuiAlert from '@material-ui/lab/Alert';
@@ -48,7 +48,7 @@ function App() {
                <Router>
                   <Switch>
                      <Route exact path="/" component={Home} />
-                     <Route exact path="/registers" component={Registers} />
+                     <Route exact path="/registers" component={RegistersTab} />
                      <Route exact path="/registers/edit/:id" component={EditRegisters} />
                      <Route exact path="/registers/create" component={CreateRegister} />
                   </Switch>
@@ -76,13 +76,11 @@ function App() {
                         {snackAlert.message}
                      </Alert>
                   </Snackbar>
-               ) : (
-                        null
-                     )
+               ) : null
             }
          </AppContext.Provider>
       </ThemeProvider>
    );
-}
+};
 
 export default App;
