@@ -1,6 +1,7 @@
 const Sequelize = require("sequelize");
 
 const RegisterModel = require("./models/Register");
+const CategoryModel = require("./models/Category");
 
 const db = new Sequelize("JTpTOqk7xe", "JTpTOqk7xe", "R8YMYFfQLF", {
     host: "www.remotemysql.com",
@@ -11,6 +12,10 @@ const db = new Sequelize("JTpTOqk7xe", "JTpTOqk7xe", "R8YMYFfQLF", {
 });
 
 const Register = RegisterModel(db, Sequelize);
+const Category = CategoryModel(db, Sequelize);
+
+Register.belongsTo(Category);
+Category.hasMany(Register);
 
 db.sync()
     .then(res => {
@@ -20,4 +25,5 @@ db.sync()
 
 module.exports = {
     Register,
+    Category
 }

@@ -41,22 +41,38 @@ router.get("/registers/:id", (req, res) => {
             })
             .catch(err => res.status(404).json({ msg: "Register not founded" }));
     } else {
+        res.status(400).json({ msg: "Insert id" });
+    }
+});
+
+router.get("/registers/category/:CategoryId", (req, res) => {
+    if (req.params.CategoryId) {
+        Register.findAll({
+            where: {
+                CategoryId: req.params.CategoryId
+            }
+        })
+            .then(register => {
+                res.json(register);
+            })
+            .catch(err => res.json(err));
+    } else {
         res.status(400).json({ msg: "Please insert id" });
     }
 });
 
 router.post("/registers", (req, res) => {
-    if (!req.body.concept || !req.body.amount || !req.body.type) {
+    if (!req.body.concept || !req.body.amount || !req.body.type || !req.body.CategoryId) {
         res.status(400).json({ msg: "Incomplete data" });
     } else {
-        const { concept, amount, type } = req.body;
-        const newRegister = { concept, amount, type };
+        const { concept, amount, type, CategoryId } = req.body;
+        const newRegister = { concept, amount, type, CategoryId };
 
         Register.create(newRegister)
             .then(result => {
                 res.json(result);
             })
-            .catch(err => res.send(err));
+            .catch(err => res.json(err));
     }
 });
 
@@ -73,7 +89,7 @@ router.put("/registers/:id", (req, res) => {
             .then(registerUpdated => {
                 res.json(registerUpdated);
             })
-            .catch(err => res.send(err));
+            .catch(err => res.json(err));
     }
 });
 

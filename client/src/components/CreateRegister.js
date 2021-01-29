@@ -1,4 +1,4 @@
-import { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { Button, Paper, TextField, Select, MenuItem, Grid, InputLabel } from '@material-ui/core';
 import Appbar from './Appbar';
 import conf from '../conf';
@@ -21,20 +21,33 @@ const styles = {
 export default function Registers() {
     const context = useContext(AppContext);
 
+    const [categories, setCategories] = useState([]);
+
     const [form, setForm] = useState({
         concept: "",
         amount: "",
-        type: ""
+        type: "",
+        CategoryId: ""
     });
+
+    useEffect(() => {
+        axios.get(`${conf.API_URL}/categories`)
+            .then(res => {
+                setCategories(res.data);
+                console.log(res.data)
+            })
+            .catch(err => console.log(err));
+    }, []);
 
     const onChangeHandler = (e) => {
         const { name, value } = e.target;
+        console.log(name, value)
 
         setForm({
             ...form,
             [name]: value
         });
-    }
+    };
 
     const onSubmitForm = (e) => {
         e.preventDefault();
@@ -45,7 +58,7 @@ export default function Registers() {
                 context.handleSnackbar("success", "Registro creado", true);
             })
             .catch(err => context.handleSnackbar("error", "No se pudo crear el registro", true));
-    }
+    };
 
     return (
         <Grid xs={12}>
@@ -63,8 +76,23 @@ export default function Registers() {
                             style={styles.fields}
                         >
                             <MenuItem disabled>Tipo</MenuItem>
-                            <MenuItem value={"income"}>Ingreso</MenuItem>
-                            <MenuItem value={"outcome"}>Egreso</MenuItem>
+                            <MenuItem value={"income"}>Income</MenuItem>
+                            <MenuItem value={"outcome"}>Outcome</MenuItem>
+                        </Select>
+                        <InputLabel style={styles.fields} id="CategoryId">Category</InputLabel>
+                        <Select
+                            name="CategoryId"
+                            labelId="CategoryId"
+                            onChange={onChangeHandler}
+                            value={form.CategoryId}
+                            style={styles.fields}
+                        >
+                            <MenuItem disabled>Category</MenuItem>
+                            {
+                                categories.map(category => (
+                                    <MenuItem key={category.id} value={category.id}>{category.name}</MenuItem>
+                                ))
+                            }
                         </Select>
                         <Button fullWidth type="submit" color="primary" variant="contained">Create</Button>
                     </form>
@@ -72,5 +100,5 @@ export default function Registers() {
             </Appbar>
         </Grid>
 
-    )
-}
+    );
+};
