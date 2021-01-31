@@ -14,7 +14,11 @@ const db = new Sequelize("JTpTOqk7xe", "JTpTOqk7xe", "R8YMYFfQLF", {
 const Register = RegisterModel(db, Sequelize);
 const Category = CategoryModel(db, Sequelize);
 
-Register.belongsTo(Category);
+Register.belongsTo(Category, {
+    foreignKey: {
+        allowNull: true
+    }
+});
 Category.hasMany(Register);
 
 db.sync()

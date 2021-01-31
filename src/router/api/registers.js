@@ -33,7 +33,7 @@ router.get("/registers/:id", (req, res) => {
     if (req.params.id) {
         Register.findOne({
             where: {
-                id: req.params.id
+                id: parseInt(req.params.id)
             }
         })
             .then(register => {
@@ -47,10 +47,13 @@ router.get("/registers/:id", (req, res) => {
 
 router.get("/registers/category/:CategoryId", (req, res) => {
     if (req.params.CategoryId) {
-        Register.findAll({
+        Register.findAndCountAll({
             where: {
-                CategoryId: req.params.CategoryId
-            }
+                CategoryId: req.params.CategoryId,
+                type: req.query.type
+            },
+            limit: parseInt(req.query.limit) || null,
+            offset: parseInt(req.query.offset) || 0
         })
             .then(register => {
                 res.json(register);
@@ -62,13 +65,12 @@ router.get("/registers/category/:CategoryId", (req, res) => {
 });
 
 router.post("/registers", (req, res) => {
-    if (!req.body.concept || !req.body.amount || !req.body.type || !req.body.CategoryId) {
+    if (!req.body.concept || !req.body.amount || !req.body.type) {
+        res.status(400).json({ msg: "Incomplete data" });
+    } else if (!req.body.concept || !req.body.amount || !req.body.CategoryId && req.body.type === "outcome") {
         res.status(400).json({ msg: "Incomplete data" });
     } else {
-        const { concept, amount, type, CategoryId } = req.body;
-        const newRegister = { concept, amount, type, CategoryId };
-
-        Register.create(newRegister)
+        Register.create(req.body)
             .then(result => {
                 res.json(result);
             })
@@ -83,7 +85,7 @@ router.put("/registers/:id", (req, res) => {
         const newRegister = req.body;
         Register.update(newRegister, {
             where: {
-                id: req.params.id
+                id: parseInt(req.params.id)
             }
         })
             .then(registerUpdated => {

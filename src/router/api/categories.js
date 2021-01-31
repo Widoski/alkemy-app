@@ -16,7 +16,7 @@ router.get("/categories/:id", (req, res) => {
     if (req.params.id) {
         Category.findOne({
             where: {
-                id: req.params.id
+                id: parseInt(req.params.id)
             }
         })
             .then(category => {
@@ -29,7 +29,9 @@ router.get("/categories/:id", (req, res) => {
 });
 
 router.post("/categories", (req, res) => {
-    if (req.body) {
+    if (!req.body.name) {
+        res.status(400).json({ msg: "Insert category name" });
+    } else {
         Category.create(req.body)
             .then(newCategory => {
                 res.json(newCategory);
@@ -45,7 +47,7 @@ router.put("/categories/:id", (req, res) => {
         const newCategory = req.body;
         Category.update(newCategory, {
             where: {
-                id: req.params.id
+                id: parseInt(req.params.id)
             }
         })
             .then(categoryUpdated => {
@@ -58,7 +60,7 @@ router.put("/categories/:id", (req, res) => {
 router.delete("/categories/:id", (req, res) => {
     Category.destroy({
         where: {
-            id: req.params.id
+            id: parseInt(req.params.id)
         }
     })
         .then(results => {
