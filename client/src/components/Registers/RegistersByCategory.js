@@ -15,7 +15,9 @@ const styles = {
         margin: 20
     },
     headRow: {
-        fontWeight: "bold"
+        fontWeight: "bold",
+        background: "black",
+        color: "white"
     },
 };
 
@@ -25,7 +27,7 @@ export default function RegistersByCategory() {
     const [registers, setRegisters] = useState([]);
     const [registersCount, setRegistersCount] = useState([]);
 
-    const type = "outcome";
+    const type = "Outcome";
     const limit = 5;
     let offset = 0;
 
@@ -73,6 +75,7 @@ export default function RegistersByCategory() {
                     labelId="category"
                     onChange={onChangeHandler}
                     value={categoryId}
+                    style={{ margin: 10 }}
                 >
                     {
                         categories.map(category => (
@@ -85,7 +88,7 @@ export default function RegistersByCategory() {
                 {
                     registers.length ? (
                         <TableContainer component={Paper}>
-                            <Table>
+                            <Table size="small">
                                 <TableHead>
                                     <TableRow>
                                         <TableCell style={styles.headRow}>Date</TableCell>
@@ -96,7 +99,7 @@ export default function RegistersByCategory() {
                                 <TableBody>
                                     {
                                         registers.map(register => (
-                                            <TableRow key={register.id}>
+                                            <TableRow key={register.id} hover>
                                                 <TableCell>{moment(register.createdAt).format("l")}</TableCell>
                                                 <TableCell>{register.concept}</TableCell>
                                                 <TableCell>{`$${register.amount}`}</TableCell>

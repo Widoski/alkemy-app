@@ -32,7 +32,7 @@ const styles = {
         fontWeight: "bold",
         textAlign: "center",
         width: "100%",
-        textAlign: "center"
+        letterSpacing: 8
     },
     linkToRegister: {
         textDecoration: "none",
@@ -45,6 +45,8 @@ const styles = {
     },
     headRow: {
         fontWeight: "bold",
+        background: "black",
+        color: "white"
     },
     table: {
         margin: 10
@@ -67,10 +69,10 @@ export default function Home() {
                 let outcome = 0;
 
                 res.data.rows.forEach(r => {
-                    if (r.type === "income") {
+                    if (r.type === "Income") {
                         income = income + parseInt(r.amount);
                     }
-                    if (r.type === "outcome") {
+                    if (r.type === "Outcome") {
                         outcome = outcome + parseInt(r.amount);
                     }
                 });
@@ -86,7 +88,7 @@ export default function Home() {
                     <Toolbar>
                         <Typography variant="button" style={styles.tableTitle}>Last registers</Typography>
                     </Toolbar>
-                    <Table>
+                    <Table size="small">
                         <TableHead>
                             <TableRow>
                                 <TableCell style={styles.headRow}>Type</TableCell>
@@ -98,7 +100,7 @@ export default function Home() {
                         <TableBody>
                             {
                                 registers.map(r => (
-                                    <TableRow key={r.id}>
+                                    <TableRow key={r.id} hover>
                                         <TableCell>{r.type}</TableCell>
                                         <TableCell>{r.concept}</TableCell>
                                         <TableCell>{moment(r.createdAt).format("ll")}</TableCell>

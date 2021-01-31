@@ -16,15 +16,11 @@ const styles = {
    headRow: {
       fontWeight: "bold"
    },
-   createButton: {
-      display: "flex",
-      justifyContent: "flex-end",
-      width: "100%",
-      margin: 10
-   },
    link: {
       textDecoration: "none",
-      color: "white"
+      color: "white",
+      width: "100%",
+      margin: 10
    },
    title: {
       fontWeight: "bold",
@@ -40,7 +36,7 @@ export default function RegistersOutcome({ properties }) {
    const [registersOutcome, setRegistersOutcome] = useState([]);
    const [outcomeCount, setOutcomeCount] = useState(0);
 
-   const type = "outcome";
+   const type = "Outcome";
    const limit = 5;
    let offset = 0;
 
@@ -81,7 +77,7 @@ export default function RegistersOutcome({ properties }) {
    return (
       <Grid container>
          <TableContainer component={Paper} style={styles.table}>
-            <Table>
+            <Table size="small">
                <TableHead>
                   <TableRow>
                      <TableCell style={styles.headRow}>Concept</TableCell>
@@ -92,33 +88,31 @@ export default function RegistersOutcome({ properties }) {
                </TableHead>
                <TableBody>
                   {
-                     registersOutcome.length ? (
-                        registersOutcome.map(r => (
-                           <TableRow key={r.id} style={styles.outcomeRow}>
-                              <TableCell>{r.concept}</TableCell>
-                              <TableCell>{moment(r.createdAt).format("l")}</TableCell>
-                              <TableCell>{`$${r.amount}`}</TableCell>
-                              <TableCell>
-                                 <Button onClick={handleEditRegister(r.id)} color="secondary">
-                                    <EditIcon />
-                                 </Button>
-                                 <Button onClick={handleDeleteRegister(r.id)} color="secondary">
-                                    <DeleteIcon />
-                                 </Button>
-                              </TableCell>
-                           </TableRow>
-                        ))
-                     ) : null
+                     registersOutcome.map(r => (
+                        <TableRow key={r.id} style={styles.outcomeRow} hover>
+                           <TableCell>{r.concept}</TableCell>
+                           <TableCell>{moment(r.createdAt).format("l")}</TableCell>
+                           <TableCell>{`$${r.amount}`}</TableCell>
+                           <TableCell>
+                              <Button onClick={handleEditRegister(r.id)} color="secondary">
+                                 <EditIcon />
+                              </Button>
+                              <Button onClick={handleDeleteRegister(r.id)} color="secondary">
+                                 <DeleteIcon />
+                              </Button>
+                           </TableCell>
+                        </TableRow>
+                     ))
                   }
                </TableBody>
             </Table>
             <Paginate count={outcomeCount} limit={limit} fetchRegisters={fetchRegisters} />
          </TableContainer>
-         <div style={styles.createButton}>
-            <Button variant="contained" color="primary">
-               <Link style={styles.link} to="/registers/create">Create</Link>
+         <Link style={styles.link} to="/registers/create">
+            <Button fullWidth variant="contained" color="primary">
+               New register
             </Button>
-         </div>
+         </Link>
       </Grid >
    );
 };

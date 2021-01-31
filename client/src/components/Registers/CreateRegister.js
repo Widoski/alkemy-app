@@ -34,14 +34,12 @@ export default function Registers() {
         axios.get(`${conf.API_URL}/categories`)
             .then(res => {
                 setCategories(res.data);
-                console.log(res.data)
             })
             .catch(err => console.log(err));
     }, []);
 
     const onChangeHandler = (e) => {
         const { name, value } = e.target;
-        console.log(name, value)
 
         setForm({
             ...form,
@@ -54,7 +52,6 @@ export default function Registers() {
 
         axios.post(`${conf.API_URL}/registers`, form)
             .then(res => {
-                console.log(res.data);
                 context.handleSnackbar("success", "Register created", true);
             })
             .catch(err => context.handleSnackbar("error", "Cannot create register", true));
@@ -76,11 +73,11 @@ export default function Registers() {
                             style={styles.fields}
                         >
                             <MenuItem disabled>Tipo</MenuItem>
-                            <MenuItem value={"income"}>Income</MenuItem>
-                            <MenuItem value={"outcome"}>Outcome</MenuItem>
+                            <MenuItem value={"Income"}>Income</MenuItem>
+                            <MenuItem value={"Outcome"}>Outcome</MenuItem>
                         </Select>
                         {
-                            form.type === "outcome" ? (
+                            form.type === "Outcome" ? (
                                 <>
                                     <InputLabel style={styles.fields} id="CategoryId">Category</InputLabel>
                                     <Select

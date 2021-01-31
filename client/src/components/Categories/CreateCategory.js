@@ -32,7 +32,7 @@ export default function CreateCategory() {
 
    const onChangeHandler = (e) => {
       const { name, value } = e.target;
-      console.log(name, value)
+
       setNewCategory({
          ...newCategory,
          [name]: value
@@ -41,12 +41,10 @@ export default function CreateCategory() {
 
    const onSubmitForm = (e) => {
       e.preventDefault();
-      console.log(newCategory)
 
       axios.post(`${conf.API_URL}/categories`, newCategory)
          .then(res => {
             context.handleSnackbar("success", "New category created", true);
-            console.log(res.data)
          })
          .catch(err => context.handleSnackbar("error", "Cannot create category", true));
    };

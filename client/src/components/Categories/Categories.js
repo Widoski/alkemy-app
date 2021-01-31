@@ -10,20 +10,18 @@ import AppContext from '../../appContext';
 
 const styles = {
    containerTable: {
-      margin: 10
-   },
-   headRow: {
-      fontWeight: "bold"
-   },
-   createButton: {
-      display: "flex",
-      width: "100%",
-      justifyContent: "flex-end",
       margin: 10,
    },
+   headRow: {
+      fontWeight: "bold",
+      background: "black",
+      color: "white"
+   },
    link: {
-      textDecoration: "none"
-   }
+      textDecoration: "none",
+      margin: 10,
+      width: "100%"
+   },
 }
 
 export default function Categories(props) {
@@ -56,39 +54,38 @@ export default function Categories(props) {
 
    return (
       <Appbar title="Categories">
-         <Grid container>
+         <Grid container xs={12} md={6}>
             <TableContainer component={Paper} style={styles.containerTable}>
-               <Table>
+               <Table size="small" >
                   <TableHead>
                      <TableRow>
                         <TableCell style={styles.headRow}>Name</TableCell>
-                        <TableCell></TableCell>
-                        <TableCell></TableCell>
+                        <TableCell style={styles.headRow}></TableCell>
                      </TableRow>
                   </TableHead>
                   <TableBody>
                      {
-                        categories.length ? (
-                           categories.map(category => (
-                              <TableRow key={category.id}>
-                                 <TableCell>{category.name}</TableCell>
-                                 <TableCell>
-                                    <Button onClick={handleEditCategory(category.id)} color="secondary">
-                                       <EditIcon />
-                                    </Button>
-                                    <Button onClick={handleDeleteCategory(category.id)} color="secondary">
-                                       <DeleteIcon />
-                                    </Button>
-                                 </TableCell>
-                              </TableRow>))
-                        ) : null
+                        categories.map(category => (
+                           <TableRow key={category.id} hover>
+                              <TableCell>{category.name}</TableCell>
+                              <TableCell>
+                                 <Button onClick={handleEditCategory(category.id)} color="secondary">
+                                    <EditIcon />
+                                 </Button>
+                                 <Button onClick={handleDeleteCategory(category.id)} color="secondary">
+                                    <DeleteIcon />
+                                 </Button>
+                              </TableCell>
+                           </TableRow>))
                      }
                   </TableBody>
                </Table>
             </TableContainer>
-            <div style={styles.createButton}>
-               <Link style={styles.link} to="categories/create"><Button variant="contained" color="primary">Create</Button></Link>
-            </div>
+            <Link style={styles.link} to="categories/create">
+               <Button fullWidth variant="contained" color="primary">
+                  Create
+               </Button>
+            </Link>
          </Grid>
       </Appbar >
    );
