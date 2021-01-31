@@ -70,7 +70,7 @@ router.get("/registers/category/:CategoryId", (req, res) => {
 router.post("/registers", (req, res) => {
     if (!req.body.concept || !req.body.amount || !req.body.type) {
         res.status(400).json({ msg: "Incomplete data" });
-    } else if (!req.body.concept || !req.body.amount || !req.body.CategoryId && req.body.type === "outcome") {
+    } else if (!req.body.concept || !req.body.amount || !req.body.CategoryId && req.body.type === "Outcome") {
         res.status(400).json({ msg: "Incomplete data" });
     } else {
         Register.create(req.body)
