@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { AppBar, Toolbar, Typography, IconButton, Button, Menu, MenuItem } from '@material-ui/core';
+import { AppBar, Toolbar, Typography, IconButton, Menu, MenuItem } from '@material-ui/core';
 import { Link } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import MenuIcon from '@material-ui/icons/Menu';
@@ -15,7 +15,7 @@ const useStyles = makeStyles((theme) => ({
 		flexGrow: 1,
 	},
 	appbarColor: {
-		background: "#493323"
+		background: "#0a043c"
 	},
 	link: {
 		textDecoration: "none",
@@ -59,14 +59,13 @@ function Appbar({ title, children }) {
 						open={Boolean(anchorEl)}
 						onClose={handleCloseMenu}
 					>
-						<MenuItem><Link className={classes.link} to="/">Home</Link></MenuItem>
-						<MenuItem><Link className={classes.link} to="/registers">My registers</Link></MenuItem>
-						<MenuItem><Link className={classes.link} to="/registers/create">Create registers</Link></MenuItem>
+						<Link className={classes.link} to="/"><MenuItem>Home</MenuItem></Link>
+						<Link className={classes.link} to="/registers"><MenuItem>My registers</MenuItem></Link>
+						<Link className={classes.link} to="/categories"><MenuItem>Categories</MenuItem></Link>
 					</Menu>
 					<Typography variant="button" className={classes.title}>
 						{title}
 					</Typography>
-					<Button color="inherit">Login</Button>
 				</Toolbar>
 			</AppBar>
 			{children}

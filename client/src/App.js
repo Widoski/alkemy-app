@@ -3,9 +3,12 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { ThemeProvider, Snackbar } from '@material-ui/core';
 import theme from './theme';
 import Home from './components/Home';
-import RegistersTab from './components/RegistersTab';
-import CreateRegister from './components/CreateRegister';
-import EditRegisters from './components/EditRegisters';
+import RegistersTab from './components/Registers/RegistersTab';
+import CreateRegister from './components/Registers/CreateRegister';
+import EditRegisters from './components/Registers/EditRegisters';
+import CreateCategories from './components/Categories/CreateCategory';
+import Categories from './components/Categories/Categories';
+import EditCategories from './components/Categories/EditCategories';
 import MuiAlert from '@material-ui/lab/Alert';
 import AppContext from './appContext';
 
@@ -51,6 +54,9 @@ function App() {
                      <Route exact path="/registers" component={RegistersTab} />
                      <Route exact path="/registers/edit/:id" component={EditRegisters} />
                      <Route exact path="/registers/create" component={CreateRegister} />
+                     <Route exact path="/categories" component={Categories} />
+                     <Route exact path="/categories/edit/:id" component={EditCategories} />
+                     <Route exact path="/categories/create" component={CreateCategories} />
                   </Switch>
                </Router>
             </div>

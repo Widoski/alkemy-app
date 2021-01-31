@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
-import { Paper, Card, Grid, Table, TableBody, TableCell, TableHead, TableRow, Typography, Toolbar } from '@material-ui/core';
+import { useEffect, useState, useContext } from 'react';
+import { Paper, Card, Grid, Table, TableBody, TableCell, TableHead, TableRow, Typography, Toolbar, TableContainer } from '@material-ui/core';
 import conf from '../conf';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
@@ -15,12 +15,12 @@ const styles = {
         justifyContent: "center",
         alignItems: "center",
         height: 100,
-        background: "#493323"
+        background: "#0a043c"
     },
     registerBox: {
         margin: 10,
         height: 100,
-        background: "#493323"
+        background: "#0a043c"
     },
     title: {
         fontWeight: "bold",
@@ -45,8 +45,11 @@ const styles = {
     },
     headRow: {
         fontWeight: "bold",
+    },
+    table: {
+        margin: 10
     }
-}
+};
 
 export default function Home() {
     const [registers, setRegisters] = useState([]);
@@ -59,7 +62,7 @@ export default function Home() {
         axios.get(`${conf.API_URL}/registers?limit=${limit}&offset=${offset}`)
             .then(res => {
                 setRegisters(res.data.rows);
-                console.log(res.data.rows)
+
                 let income = 0;
                 let outcome = 0;
 
@@ -74,16 +77,16 @@ export default function Home() {
                 const balance = income - outcome;
                 setBalance(balance);
             });
-    }, [])
+    }, []);
 
     return (
-        <Grid container>
-            <Appbar title="Welcome">
-                <Grid item xs={12} xl={6}>
+        <Appbar title="Welcome">
+            <Grid container>
+                <TableContainer style={styles.table} component={Paper}>
                     <Toolbar>
                         <Typography variant="button" style={styles.tableTitle}>Last registers</Typography>
                     </Toolbar>
-                    <Table style={styles.table} component={Paper}>
+                    <Table>
                         <TableHead>
                             <TableRow>
                                 <TableCell style={styles.headRow}>Type</TableCell>
@@ -105,7 +108,7 @@ export default function Home() {
                             }
                         </TableBody>
                     </Table>
-                </Grid>
+                </TableContainer>
                 <Grid container item xs={12}>
                     <Grid item xs={6}>
                         <Card style={styles.balanceBox}>
@@ -121,7 +124,7 @@ export default function Home() {
                         </Card>
                     </Grid>
                 </Grid>
-            </Appbar>
-        </Grid>
-    )
-}
+            </Grid>
+        </Appbar>
+    );
+};

@@ -1,9 +1,9 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { Button, Paper, TextField, Select, MenuItem, Grid, InputLabel } from '@material-ui/core';
-import Appbar from './Appbar';
-import conf from '../conf';
+import Appbar from '../Appbar';
+import conf from '../../conf';
 import axios from 'axios';
-import AppContext from '../appContext';
+import AppContext from '../../appContext';
 
 const styles = {
     formContainer: {
@@ -16,7 +16,7 @@ const styles = {
     fields: {
         margin: 10
     }
-}
+};
 
 export default function Registers() {
     const context = useContext(AppContext);
@@ -27,7 +27,7 @@ export default function Registers() {
         concept: "",
         amount: "",
         type: "",
-        CategoryId: ""
+        CategoryId: null
     });
 
     useEffect(() => {
@@ -55,13 +55,13 @@ export default function Registers() {
         axios.post(`${conf.API_URL}/registers`, form)
             .then(res => {
                 console.log(res.data);
-                context.handleSnackbar("success", "Registro creado", true);
+                context.handleSnackbar("success", "Register created", true);
             })
-            .catch(err => context.handleSnackbar("error", "No se pudo crear el registro", true));
+            .catch(err => context.handleSnackbar("error", "Cannot create register", true));
     };
 
     return (
-        <Grid xs={12}>
+        <Grid>
             <Appbar title="Create register">
                 <Paper style={styles.formContainer}>
                     <form onSubmit={onSubmitForm} style={styles.form}>
@@ -79,26 +79,31 @@ export default function Registers() {
                             <MenuItem value={"income"}>Income</MenuItem>
                             <MenuItem value={"outcome"}>Outcome</MenuItem>
                         </Select>
-                        <InputLabel style={styles.fields} id="CategoryId">Category</InputLabel>
-                        <Select
-                            name="CategoryId"
-                            labelId="CategoryId"
-                            onChange={onChangeHandler}
-                            value={form.CategoryId}
-                            style={styles.fields}
-                        >
-                            <MenuItem disabled>Category</MenuItem>
-                            {
-                                categories.map(category => (
-                                    <MenuItem key={category.id} value={category.id}>{category.name}</MenuItem>
-                                ))
-                            }
-                        </Select>
+                        {
+                            form.type === "outcome" ? (
+                                <>
+                                    <InputLabel style={styles.fields} id="CategoryId">Category</InputLabel>
+                                    <Select
+                                        name="CategoryId"
+                                        labelId="CategoryId"
+                                        onChange={onChangeHandler}
+                                        value={form.CategoryId}
+                                        style={styles.fields}
+                                    >
+                                        <MenuItem disabled>Category</MenuItem>
+                                        {
+                                            categories.map(category => (
+                                                <MenuItem key={category.id} value={category.id}>{category.name}</MenuItem>
+                                            ))
+                                        }
+                                    </Select>
+                                </>
+                            ) : null
+                        }
                         <Button fullWidth type="submit" color="primary" variant="contained">Create</Button>
                     </form>
                 </Paper>
             </Appbar>
         </Grid>
-
     );
 };

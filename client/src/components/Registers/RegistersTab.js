@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { Tabs, Tab, Grid, AppBar } from '@material-ui/core';
+import { Tabs, Tab, Grid } from '@material-ui/core';
 import RegistersIncome from './RegistersIncome.js';
 import RegistersOutcome from './RegistersOutcome.js';
-import Appbar from './Appbar';
+import RegistersByCategory from './RegistersByCategory';
+import Appbar from '../Appbar';
 
 export default function TabPanel(props) {
     const [value, setValue] = useState(0);
@@ -15,21 +16,25 @@ export default function TabPanel(props) {
         <Grid item xs={12} style={{ background: "#f5f5f5" }}>
             <Appbar title="My registers">
                 <Tabs value={value} onChange={handleChange} centered={true}>
-                    <Tab label="Ingresos" value={0} />
-                    <Tab label="Egresos" value={1} />
+                    <Tab label="Income" value={0} />
+                    <Tab label="Outcome" value={1} />
+                    <Tab label="Expenses by category" value={2} />
                 </Tabs>
-                <Projects value={value} id={0}>
+                <Registers value={value} id={0}>
                     <RegistersIncome properties={props} />
-                </Projects>
-                <Projects value={value} id={1}>
+                </Registers>
+                <Registers value={value} id={1}>
                     <RegistersOutcome properties={props} />
-                </Projects>
+                </Registers>
+                <Registers value={value} id={2} >
+                    <RegistersByCategory properties={props} />
+                </Registers>
             </Appbar>
         </Grid>
-    )
-}
+    );
+};
 
-const Projects = ({ id, value, children }) =>
+const Registers = ({ id, value, children }) =>
 (
     <>
         {
@@ -40,6 +45,6 @@ const Projects = ({ id, value, children }) =>
             ) : null
         }
     </>
-)
+);
 
 
