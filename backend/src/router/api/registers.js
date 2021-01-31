@@ -12,6 +12,7 @@ router.get("/registers", (req, res) => {
             },
             limit: parseInt(req.query.limit) || null,
             offset: parseInt(req.query.offset) || 0,
+            order: [['createdAt', 'DESC']],
         })
             .then(registers => {
                 res.json(registers);
@@ -21,6 +22,7 @@ router.get("/registers", (req, res) => {
         Register.findAndCountAll({
             limit: parseInt(req.query.limit) || null,
             offset: parseInt(req.query.offset) || 0,
+            order: [['createdAt', 'DESC']],
         })
             .then(registers => {
                 res.json(registers);
@@ -53,7 +55,8 @@ router.get("/registers/category/:CategoryId", (req, res) => {
                 type: req.query.type
             },
             limit: parseInt(req.query.limit) || null,
-            offset: parseInt(req.query.offset) || 0
+            offset: parseInt(req.query.offset) || 0,
+            order: [['createdAt', 'DESC']],
         })
             .then(register => {
                 res.json(register);
